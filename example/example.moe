@@ -1,0 +1,7 @@
+///start
+John{typing_speed=.1}[data, arg1, 1, 1.0|data]:HIII
+///next
+Jane[MoveSprite, left, 1.0, bounce]:What's up!
+///end
+Charlie{typing_speed=.0016,color=0xFFFFFF}:
+///
