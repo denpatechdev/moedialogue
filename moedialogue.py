@@ -1,15 +1,6 @@
 #! /usr/bin/python3
 import sys
 import json
-import os
-
-typing_speeds = {
-    'john': 0.1,
-    'instant': 1
-}
-colors = {
-    'white': '0xFFFFFF' 
-}
 
 class DialogueAttr:
     def __init__(self, name: str, value):
@@ -71,8 +62,7 @@ DIALOGUE_EVENT_END_CHAR = ']'
 DIALOGUE_ATTR_START_CHAR = '{'
 DIALOGUE_ATTR_END_CHAR = '}'
 DIALOGUE_EVENT_SEPERATOR = '|'
-EVENT_SEPERATOR = ''
-EVENT_PARAM_SEPERATOR = ','
+DIALOGUE_EVENT_PARAM_SEPERATOR = ','
 
 def is_number(text: str):
     try:
@@ -109,8 +99,8 @@ def parse_dialogue(lines: list[str]) -> list[DialogueBlock]:
             data_start = line.index(DIALOGUE_EVENT_START_CHAR)
             data_end = line.index(DIALOGUE_EVENT_END_CHAR)
             data_substr = line[data_start+1:data_end]
-            for data in data_substr.split('|'):
-                args: list = data.split(',')
+            for data in data_substr.split(DIALOGUE_EVENT_SEPERATOR):
+                args: list = data.split(DIALOGUE_EVENT_PARAM_SEPERATOR)
                 ev_name = args[0]
                 args.remove(args[0])
                 for i in range(0, len(args)):
