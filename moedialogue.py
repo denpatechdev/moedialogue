@@ -150,6 +150,7 @@ if __name__ == '__main__':
             for ok in branches[key]:
                 thing.append(ok.as_dict())
             dialogue_data.append({key: thing})
+        dialogue_data = {'dialogue': dialogue_data}
         json.dump(dialogue_data, f, indent=2)
         print(f"Data written to '{f.name}'")
         

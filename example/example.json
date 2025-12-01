@@ -1,74 +1,76 @@
-[
-  {
-    "start": [
-      {
-        "name": "John",
-        "text": "Hi!",
-        "attrs": [
-          {
-            "name": "typing_speed",
-            "value": 0.1
-          }
-        ],
-        "events": [
-          {
-            "name": "data",
-            "args": [
-              "arg1",
-              1.0,
-              1.0
-            ]
-          },
-          {
-            "name": "data",
-            "args": []
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "next": [
-      {
-        "name": "Jane",
-        "text": "What's up!",
-        "attrs": [],
-        "events": [
-          {
-            "name": "MoveSprite",
-            "args": [
-              "left",
-              1.0,
-              "bounce"
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "end": [
-      {
-        "name": "Charlie",
-        "text": "...",
-        "attrs": [
-          {
-            "name": "typing_speed",
-            "value": 0.0016
-          },
-          {
-            "name": "color",
-            "value": "0xFFFFFF"
-          }
-        ],
-        "events": []
-      },
-      {
-        "name": "Erik",
-        "text": "Hello, world!",
-        "attrs": [],
-        "events": []
-      }
-    ]
-  }
-]
+{
+  "dialogue": [
+    {
+      "start": [
+        {
+          "name": "John",
+          "text": "Hi!",
+          "attrs": [
+            {
+              "name": "typing_speed",
+              "value": 0.1
+            }
+          ],
+          "events": [
+            {
+              "name": "data",
+              "args": [
+                "arg1",
+                1.0,
+                1.0
+              ]
+            },
+            {
+              "name": "data",
+              "args": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "next": [
+        {
+          "name": "Jane",
+          "text": "What's up!",
+          "attrs": [],
+          "events": [
+            {
+              "name": "MoveSprite",
+              "args": [
+                "left",
+                1.0,
+                "bounce"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "end": [
+        {
+          "name": "Charlie",
+          "text": "...",
+          "attrs": [
+            {
+              "name": "typing_speed",
+              "value": 0.0016
+            },
+            {
+              "name": "color",
+              "value": "0xFFFFFF"
+            }
+          ],
+          "events": []
+        },
+        {
+          "name": "Erik",
+          "text": "Hello, world!",
+          "attrs": [],
+          "events": []
+        }
+      ]
+    }
+  ]
+}
