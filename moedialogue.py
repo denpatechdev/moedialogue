@@ -87,7 +87,7 @@ def parse_dialogue(lines: list[str]) -> list[DialogueBlock]:
     for l in lines:
         line = l.strip()
         name = ""
-        text = line[line.index(TEXT_SEPERATOR)+1:]
+        text = line[line.index(TEXT_SEPERATOR)+1:].strip()
         attrs: list[DialogueAttr] = []
         events: list[DialogueEvent] = []
         has_events = DIALOGUE_EVENT_START_CHAR in line[:line.index(TEXT_SEPERATOR)] and DIALOGUE_EVENT_END_CHAR in line[:line.index(TEXT_SEPERATOR)] 

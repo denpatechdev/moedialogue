@@ -3,7 +3,7 @@
     "start": [
       {
         "name": "John",
-        "text": "HIII",
+        "text": "Hi!",
         "attrs": [
           {
             "name": "typing_speed",
@@ -50,7 +50,7 @@
     "end": [
       {
         "name": "Charlie",
-        "text": "",
+        "text": "...",
         "attrs": [
           {
             "name": "typing_speed",
@@ -61,6 +61,12 @@
             "value": "0xFFFFFF"
           }
         ],
+        "events": []
+      },
+      {
+        "name": "Erik",
+        "text": "Hello, world!",
+        "attrs": [],
         "events": []
       }
     ]
