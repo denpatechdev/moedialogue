@@ -1,6 +1,6 @@
 # Sample line
 
-`Name{attribute_name=value, attribute2_name=value}\[event1, arg, arg2|event2, arg, arg2\]: Hello world!`
+`Name{attribute_name=value, attribute2_name=value}[event1, arg, arg2|event2, arg, arg2]: Hello world!`
 
 Attributes (inside of {}) and events (inside of []) are optional.
 
