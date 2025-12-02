@@ -90,6 +90,7 @@ def is_number(text: str):
 def parse_dialogue(lines: list[str]) -> list:
     dialogue_blocks = []
     last_dialogue_block: DialogueBlock
+    defaults = None
     for l in lines:
         line = l.strip()
         if not line.startswith('->'): #if not a choice
@@ -97,6 +98,10 @@ def parse_dialogue(lines: list[str]) -> list:
             text = line[line.index(TEXT_SEPERATOR)+1:].strip()
             attrs: list[DialogueAttr] = []
             events: list[DialogueEvent] = []
+            
+            with open('defaults.json') as f:
+                defaults = json.load(f)
+
             has_events = DIALOGUE_EVENT_START_CHAR in line[:line.index(TEXT_SEPERATOR)] and DIALOGUE_EVENT_END_CHAR in line[:line.index(TEXT_SEPERATOR)] 
             has_attrs = DIALOGUE_ATTR_START_CHAR in line[:line.index(TEXT_SEPERATOR)] and DIALOGUE_ATTR_END_CHAR in line[:line.index(TEXT_SEPERATOR)] 
             if has_attrs:
@@ -132,6 +137,18 @@ def parse_dialogue(lines: list[str]) -> list:
                 name = line[:line.index(DIALOGUE_ATTR_START_CHAR)]
             elif has_events and not has_attrs:
                 name = line[:line.index(DIALOGUE_EVENT_START_CHAR)]
+
+
+            new_attrs = attrs.copy()
+            for item in defaults['defaults']:
+                if name == item['name']:
+                    for attr in attrs:
+                        for default_attr in item['attrs']:
+                            if default_attr['name'] in attr.name:
+                                continue
+                            else:
+                                new_attrs.append(DialogueAttr(default_attr['name'], default_attr['value']))
+            attrs = new_attrs.copy()
             dialogue_block = DialogueBlock(name, text, attrs, events)
             last_dialogue_block = dialogue_block
             dialogue_blocks.append(dialogue_block)
