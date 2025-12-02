@@ -71,6 +71,7 @@ class Choice:
             'event': self.event.as_dict()
         }
 
+DEFAULTS_FILE = 'defaults.json'
 BRANCH_SEPERATOR = '///'
 TEXT_SEPERATOR = ':'
 DIALOGUE_EVENT_START_CHAR = '['
@@ -99,7 +100,7 @@ def parse_dialogue(lines: list[str]) -> list:
             attrs: list[DialogueAttr] = []
             events: list[DialogueEvent] = []
             
-            with open('defaults.json') as f:
+            with open(DEFAULTS_FILE) as f:
                 defaults = json.load(f)
 
             has_events = DIALOGUE_EVENT_START_CHAR in line[:line.index(TEXT_SEPERATOR)] and DIALOGUE_EVENT_END_CHAR in line[:line.index(TEXT_SEPERATOR)] 
