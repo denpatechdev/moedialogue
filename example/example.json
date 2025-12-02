@@ -24,6 +24,26 @@
               "name": "data",
               "args": []
             }
+          ],
+          "choices": [
+            {
+              "text": "Egbert",
+              "event": {
+                "name": "set_branch",
+                "args": [
+                  "next"
+                ]
+              }
+            },
+            {
+              "text": "Doe",
+              "event": {
+                "name": "set_branch",
+                "args": [
+                  "end"
+                ]
+              }
+            }
           ]
         }
       ]
@@ -43,7 +63,8 @@
                 "bounce"
               ]
             }
-          ]
+          ],
+          "choices": []
         }
       ]
     },
@@ -62,13 +83,15 @@
               "value": "0xFFFFFF"
             }
           ],
-          "events": []
+          "events": [],
+          "choices": []
         },
         {
           "name": "Erik",
           "text": "Hello, world!",
           "attrs": [],
-          "events": []
+          "events": [],
+          "choices": []
         }
       ]
     }

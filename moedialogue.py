@@ -37,6 +37,7 @@ class DialogueBlock:
         self.text = text
         self.attrs = attrs
         self.events = events
+        self.choices = []
     
     def __repr__(self):
         return f'DialogueBlock({self.name}, {self.text}, {self.attrs}, {self.events})'
@@ -44,15 +45,30 @@ class DialogueBlock:
     def as_dict(self):
         event_dicts = []
         attr_dicts = []
+        choices_dicts = []
         for ev in self.events:
             event_dicts.append(ev.as_dict())
         for at in self.attrs:
             attr_dicts.append(at.as_dict())
+        for ch in self.choices:
+            choices_dicts.append(ch.as_dict())
         return {
             'name': self.name,
             'text': self.text,
             'attrs': attr_dicts,
-            'events': event_dicts
+            'events': event_dicts,
+            'choices': choices_dicts
+        }
+
+class Choice:
+    def __init__(self, text: str, event: DialogueEvent):
+        self.text = text
+        self.event = event
+    
+    def as_dict(self):
+        return {
+            'text': self.text,
+            'event': self.event.as_dict()
         }
 
 BRANCH_SEPERATOR = '///'
@@ -71,52 +87,68 @@ def is_number(text: str):
     except:
         return False
 
-def parse_dialogue(lines: list[str]) -> list[DialogueBlock]:
+def parse_dialogue(lines: list[str]) -> list:
     dialogue_blocks = []
-
+    last_dialogue_block: DialogueBlock
     for l in lines:
         line = l.strip()
-        name = ""
-        text = line[line.index(TEXT_SEPERATOR)+1:].strip()
-        attrs: list[DialogueAttr] = []
-        events: list[DialogueEvent] = []
-        has_events = DIALOGUE_EVENT_START_CHAR in line[:line.index(TEXT_SEPERATOR)] and DIALOGUE_EVENT_END_CHAR in line[:line.index(TEXT_SEPERATOR)] 
-        has_attrs = DIALOGUE_ATTR_START_CHAR in line[:line.index(TEXT_SEPERATOR)] and DIALOGUE_ATTR_END_CHAR in line[:line.index(TEXT_SEPERATOR)] 
-        if has_attrs:
-            data_start = line.index(DIALOGUE_ATTR_START_CHAR)
-            data_end = line.index(DIALOGUE_ATTR_END_CHAR)
-            data_substr = line[data_start+1:data_end]
-            for data in data_substr.split(','):
-                attr_name, attr_value = "", ""
-                data_split = data.split('=')
-                attr_name = data_split[0].strip()
-                attr_value = data_split[1].strip()
-                if is_number(attr_value):
-                    attr_value = float(attr_value)
-                attr = DialogueAttr(attr_name, attr_value)
-                attrs.append(attr)
-        if has_events:
-            data_start = line.index(DIALOGUE_EVENT_START_CHAR)
-            data_end = line.index(DIALOGUE_EVENT_END_CHAR)
-            data_substr = line[data_start+1:data_end]
-            for data in data_substr.split(DIALOGUE_EVENT_SEPERATOR):
-                args: list = data.split(DIALOGUE_EVENT_PARAM_SEPERATOR)
-                ev_name = args[0]
-                args.remove(args[0])
-                for i in range(0, len(args)):
-                    args[i] = args[i].strip()
-                    if is_number(args[i]):
-                        args[i] = float(args[i])
-                ev = DialogueEvent(ev_name, args)
-                events.append(ev)
-        if not has_attrs and not has_events:
-            name = line[:line.index(TEXT_SEPERATOR)]
-        elif has_attrs and not has_events or has_attrs and has_events:
-            name = line[:line.index(DIALOGUE_ATTR_START_CHAR)]
-        elif has_events and not has_attrs:
-            name = line[:line.index(DIALOGUE_EVENT_START_CHAR)]
-        dialogue_block = DialogueBlock(name, text, attrs, events)
-        dialogue_blocks.append(dialogue_block)
+        if not line.startswith('->'): #if not a choice
+            name = ""
+            text = line[line.index(TEXT_SEPERATOR)+1:].strip()
+            attrs: list[DialogueAttr] = []
+            events: list[DialogueEvent] = []
+            has_events = DIALOGUE_EVENT_START_CHAR in line[:line.index(TEXT_SEPERATOR)] and DIALOGUE_EVENT_END_CHAR in line[:line.index(TEXT_SEPERATOR)] 
+            has_attrs = DIALOGUE_ATTR_START_CHAR in line[:line.index(TEXT_SEPERATOR)] and DIALOGUE_ATTR_END_CHAR in line[:line.index(TEXT_SEPERATOR)] 
+            if has_attrs:
+                data_start = line.index(DIALOGUE_ATTR_START_CHAR)
+                data_end = line.index(DIALOGUE_ATTR_END_CHAR)
+                data_substr = line[data_start+1:data_end]
+                for data in data_substr.split(','):
+                    attr_name, attr_value = "", ""
+                    data_split = data.split('=')
+                    attr_name = data_split[0].strip()
+                    attr_value = data_split[1].strip()
+                    if is_number(attr_value):
+                        attr_value = float(attr_value)
+                    attr = DialogueAttr(attr_name, attr_value)
+                    attrs.append(attr)
+            if has_events:
+                data_start = line.index(DIALOGUE_EVENT_START_CHAR)
+                data_end = line.index(DIALOGUE_EVENT_END_CHAR)
+                data_substr = line[data_start+1:data_end]
+                for data in data_substr.split(DIALOGUE_EVENT_SEPERATOR):
+                    args: list = data.split(DIALOGUE_EVENT_PARAM_SEPERATOR)
+                    ev_name = args[0]
+                    args.remove(args[0])
+                    for i in range(0, len(args)):
+                        args[i] = args[i].strip()
+                        if is_number(args[i]):
+                            args[i] = float(args[i])
+                    ev = DialogueEvent(ev_name, args)
+                    events.append(ev)
+            if not has_attrs and not has_events:
+                name = line[:line.index(TEXT_SEPERATOR)]
+            elif has_attrs and not has_events or has_attrs and has_events:
+                name = line[:line.index(DIALOGUE_ATTR_START_CHAR)]
+            elif has_events and not has_attrs:
+                name = line[:line.index(DIALOGUE_EVENT_START_CHAR)]
+            dialogue_block = DialogueBlock(name, text, attrs, events)
+            last_dialogue_block = dialogue_block
+            dialogue_blocks.append(dialogue_block)
+        else: # is a choice
+            text = line[line.index('->')+2:line.index(TEXT_SEPERATOR)].strip()
+            event_data: list = line[line.index(TEXT_SEPERATOR)+1:].strip().split(DIALOGUE_EVENT_PARAM_SEPERATOR)
+            event_name = event_data[0]
+            event_data.remove(event_name)
+            for i in range(0, len(event_data)):
+                event_data[i] = event_data[i].strip()
+                if is_number(event_data[i]):
+                    event_data[i] = float(event_data[i])
+            event = DialogueEvent(event_name, event_data)
+            last_dialogue_block.choices.append(Choice(text, event))
+                    
+
+
     return dialogue_blocks
     
 

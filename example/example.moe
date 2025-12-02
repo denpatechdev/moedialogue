@@ -1,5 +1,7 @@
 ///start
 John{typing_speed=.1}[data, arg1, 1, 1.0|data]: Hi!
+-> Egbert: set_branch, next
+-> Doe: set_branch, end
 ///next
 Jane[MoveSprite, left, 1.0, bounce]: What's up!
 ///end
