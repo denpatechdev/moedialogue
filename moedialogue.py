@@ -78,7 +78,7 @@ DIALOGUE_EVENT_START_CHAR = '['
 DIALOGUE_EVENT_END_CHAR = ']'
 DIALOGUE_ATTR_START_CHAR = '{'
 DIALOGUE_ATTR_END_CHAR = '}'
-DIALOGUE_EVENT_SEPERATOR = '|'
+DIALOGUE_EVENT_SEPERATOR = ';'
 DIALOGUE_EVENT_PARAM_SEPERATOR = ','
 
 def is_number(text: str):
@@ -200,8 +200,6 @@ if __name__ == '__main__':
             for ok in branches[key]:
                 thing.append(ok.as_dict())
             dialogue_data.append({key: thing})
-        dialogue_data = {'dialogue': dialogue_data}
+        dialogue_data = {'dialogue': dialogue_data, 'branches': [b for b in branches.keys()]}
         json.dump(dialogue_data, f, indent=2)
         print(f"Data written to '{f.name}'")
-        
-    
